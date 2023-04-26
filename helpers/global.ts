@@ -159,6 +159,18 @@ const pagination = (
     record: data.length,
   };
 };
+const paginationScrapper = (
+  total_page: number = 0,
+  current_page: number = 1,
+  data: any = []
+) => {
+  return {
+    total_page,
+    current_page,
+    data,
+    record: data.length,
+  };
+};
 
 const paginationLimitOffsetSearch = (req: Request) => {
   let page = req.query.page ? parseInt(val_xss(req.query.page.toString())) : 1;
@@ -170,6 +182,14 @@ const paginationLimitOffsetSearch = (req: Request) => {
   return { limit, offset: (page - 1) * limit, search, page };
 };
 
+const paginationScrapperSearchPage = (req: Request) => {
+  let page = req.query.page ? parseInt(val_xss(req.query.page.toString())) : 1;
+  let search = req.query.search ?? "";
+  if (page <= 0) page = 1;
+  let resp = `?page=${page}`;
+  if (search != "") resp += `&q=${search}`;
+  return { search, page, str: resp };
+};
 const uploadImage = (
   base64Image: string,
   dirPath: string,
@@ -235,6 +255,8 @@ export {
   val_xss,
   genSqlDate,
   pagination,
+  paginationScrapper,
+  paginationScrapperSearchPage,
   paginationLimitOffsetSearch,
   uploadImage,
   loadImage,
