@@ -173,7 +173,7 @@ const paginationScrapper = (
 };
 
 const paginationLimitOffsetSearch = (req: Request) => {
-  let page = req.query.page ? parseInt(val_xss(req.query.page.toString())) : 1;
+  let page = req.query.page ? parseInt(val_xss(req.query.page as string)) : 1;
   let limit = req.query.limit
     ? parseInt(val_xss(req.query.limit.toString()))
     : 10;

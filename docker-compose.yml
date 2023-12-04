@@ -1,0 +1,46 @@
+# docker-compose.yml
+
+version: '5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
+    links:
+      - db
+    command: bash -c "
+        npm run migrate
+        && npm run start
+       "
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: noneedpassword
+      POSTGRES_DB: todolist
+    ports:
+      - '5431:5432'
+  minio:
+    image: minio/minio
+    container_name: minio-server
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ACCESS_KEY: nouser
+      MINIO_SECRET_KEY: whyusepassword
+      MINIO_ROOT_USER: nouser
+      MINIO_ROOT_PASSWORD: whyusepassword
+      MINIO_ADDRESS: ':9000'
+      MINIO_CONSOLE_ADDRESS: ':9090'
+    volumes:
+      - ./data:/data
+    command: minio server /data

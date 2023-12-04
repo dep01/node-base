@@ -2,7 +2,6 @@ import express,{Request,Response} from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors = require("cors");
-import _authorization from "../middleware/authorization";
 const path = require('path');
 const { genSaltSync, hashSync } = require("bcrypt");
 
@@ -55,7 +54,7 @@ class Server {
   }
 }
 const server = new Server();
-((port = process.env.APP_PORT || 3000) => {
+((port = process.env.APP_PORT ?? 3000) => {
   server.app.listen(port);
   console.log("server is running on port :" + port);
 })();
